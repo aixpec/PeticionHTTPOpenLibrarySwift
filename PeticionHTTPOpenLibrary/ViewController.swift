@@ -8,10 +8,18 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var txtISBN: UITextField!
+    @IBOutlet weak var lblResultado: UILabel!
+    
+    
     override func viewDidLoad() {
+       
         super.viewDidLoad()
+        
+        self.txtISBN.delegate = self
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -20,6 +28,33 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        let resultado : String = buscarISBN(txtISBN.text!)
+        lblResultado.text = resultado;
+        
+        return true
+    }
+    
+    
+    func textFieldShouldClear(textField: UITextField) -> Bool {
+        textField.text = ""
+        lblResultado.text = ""
+        textField.resignFirstResponder()
+        return false
+    }
+    
+    func buscarISBN(ISBN : String) -> String{
+        let urls = "https://openlibrary.org/api/books?jscmd=data&format=json&bibkeys=ISBN:" + ISBN
+        let nsURL = NSURL(string:urls)
+        let datos:NSData? = NSData(contentsOfURL: nsURL!)
+        let texto = NSString(data:datos!,encoding:NSUTF8StringEncoding)
+        
+        return texto! as String
+    }
+    
+ 
+    
 }
 
