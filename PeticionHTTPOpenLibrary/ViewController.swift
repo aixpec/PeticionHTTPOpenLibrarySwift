@@ -12,7 +12,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var txtISBN: UITextField!
     @IBOutlet weak var lblResultado: UILabel!
-    
+    var revisarConexion = Reachability()
     
     override func viewDidLoad() {
        
@@ -31,8 +31,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
+        if revisarConexion.isConnectedToNetwork(){
         let resultado : String = buscarISBN(txtISBN.text!)
-        lblResultado.text = resultado;
+            lblResultado.text = resultado;
+        }
+        else{
+            let refreshAlert = UIAlertController(title: "Error", message: "Sin conexión a internet", preferredStyle: UIAlertControllerStyle.Alert)
+
+            presentViewController(refreshAlert, animated: true, completion: nil)
+        }
         
         return true
     }
